@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product; // <-- Import the Product model
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -12,7 +13,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        // Get all products from the database
+        $products = Product::all();
+
+        // Return the products as a JSON response
+        return response()->json($products);
     }
 
     /**
@@ -20,7 +25,20 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'stock_quantity' => 'required|integer|min:0',
+            'sku' => 'nullable|string|unique:products,sku',
+        ]);
+
+        // Create the product using the validated data
+        $product = Product::create($validatedData);
+
+        // Return a successful response with the created product data
+        return response()->json($product, 201); // 201 means "Created"
     }
 
     /**
