@@ -3,29 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product; // <-- Import the Product model
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // Get all products from the database
-        $products = Product::all();
-
-        // Return the products as a JSON response
-        return response()->json($products);
+        return response()->json(Product::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // Validate the incoming request data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -33,12 +22,8 @@ class ProductController extends Controller
             'stock_quantity' => 'required|integer|min:0',
             'sku' => 'nullable|string|unique:products,sku',
         ]);
-
-        // Create the product using the validated data
         $product = Product::create($validatedData);
-
-        // Return a successful response with the created product data
-        return response()->json($product, 201); // 201 means "Created"
+        return response()->json($product, 201);
     }
 
     /**
@@ -46,7 +31,9 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Find the product by its ID or fail
+        $product = Product::findOrFail($id);
+        return response()->json($product);
     }
 
     /**
@@ -54,7 +41,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        // Validation rules are similar to store, but sku can be ignored if it's the same product
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'stock_quantity' => 'required|integer|min:0',
+            'sku' => 'nullable|string|unique:products,sku,' . $product->id,
+        ]);
+
+        $product->update($validatedData);
+        return response()->json($product);
     }
 
     /**
@@ -62,6 +61,10 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        // Return a "No Content" response, which is standard for a successful deletion
+        return response()->json(null, 204);
     }
 }
