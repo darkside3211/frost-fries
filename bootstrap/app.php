@@ -3,7 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request; // <-- Make sure this is imported
+use Illuminate\Http\Request;
+use Throwable;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,9 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // This is the crucial part you need to add.
-        // It tells Laravel to return a JSON error for any
-        // unauthenticated request to an /api/* route.
+        // This tells Laravel to return JSON for API errors
         $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
             if ($request->is('api/*')) {
                 return true;
@@ -27,3 +26,4 @@ return Application::configure(basePath: dirname(__DIR__))
             return false;
         });
     })->create();
+
