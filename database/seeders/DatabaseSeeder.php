@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product; // You need this to create products
-use App\Models\User;    // You need this to create users
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,22 +14,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Step 1: Create 50 random products using the ProductFactory.
-        // This line requires you to have created 'ProductFactory.php' first.
+        // Create 50 random products using the ProductFactory.
         Product::factory(50)->create();
 
-        // Step 2: Create a specific Admin user for testing.
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@frostfries.com', // A more specific email
-            'role' => 'admin' // IMPORTANT: Assign the 'admin' role
-        ]);
+        // Create or update the Admin user.
+        User::updateOrCreate(
+            ['email' => 'admin@frostfries.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        // Step 3 (Optional): Create a specific Cashier user for testing.
-        User::factory()->create([
-            'name' => 'Cashier User',
-            'email' => 'cashier@frostfries.com',
-            'role' => 'cashier' // Assign the 'cashier' role
-        ]);
+        // Create or update the Cashier user.
+        User::updateOrCreate(
+            ['email' => 'cashier@frostfries.com'],
+            [
+                'name' => 'Cashier User',
+                'password' => Hash::make('password'),
+                'role' => 'cashier',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
