@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\OrderController; 
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +17,12 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::apiResource('products', ProductController::class);
+
+     // Route for creating a new order
+    Route::post('/orders', [OrderController::class, 'store']);
+
+    // Routes for owner-specific reports
+    Route::get('/reports/low-stock', [ReportController::class, 'lowStock']);
+    Route::get('/reports/sales-summary', [ReportController::class, 'salesSummary']);
 });
 
