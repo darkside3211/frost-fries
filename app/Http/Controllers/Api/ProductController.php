@@ -8,11 +8,22 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         return response()->json(Product::all());
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -28,6 +39,9 @@ class ProductController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(string $id)
     {
@@ -38,6 +52,10 @@ class ProductController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, string $id)
     {
@@ -58,6 +76,9 @@ class ProductController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(string $id)
     {
