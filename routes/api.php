@@ -22,7 +22,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/orders', [OrderController::class, 'store']);
 
     // Routes for owner-specific reports
-    Route::get('/reports/low-stock', [ReportController::class, 'lowStock']);
-    Route::get('/reports/sales-summary', [ReportController::class, 'salesSummary']);
+    Route::prefix('reports')->group(function () {
+        Route::get('/low-stock', [ReportController::class, 'lowStock']);
+        Route::get('/sales-summary', [ReportController::class, 'salesSummary']);
+    });
 });
-

@@ -6,19 +6,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    public function definition()
     {
         return [
-            'name' => $this->faker->words(2, true),
-            'description' => $this->faker->sentence,
-            'price' => $this->faker->randomFloat(2, 50, 500), // Price between 50.00 and 500.00
-            'stock_quantity' => $this->faker->numberBetween(5, 100),
-            'sku' => $this->faker->unique()->ean8(),
+            'name' => $this->faker->words(3, true), // e.g. "Delicious Spicy Burger"
+            'description' => $this->faker->sentence(),
+            'price' => $this->faker->randomFloat(2, 50, 500), // Prices between 50.00 and 500.00
+            'stock_quantity' => $this->faker->numberBetween(0, 100),
+            'sku' => $this->faker->unique()->ean8(), // Random 8-digit barcode
         ];
     }
 }
